@@ -1,70 +1,97 @@
-import './styles/App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useState } from 'react';
-import Element from './components/element';
+import React, {Component, useState} from "react";
+import '../styles/App.css';
 
-function App() {
 
-  const [text, setText] = useState();
-  const [arr, setArr] = useState([]);
-  const [popEl, setPopEl] = useState('')
-  const [topEl, setTopEl] = useState('')
+const App = () => {
 
-  const handleInput = (e) => {
-    setText(e.target.value);
-  }
+    const validate = (event) => {
+      
+    event.preventDefault();
+    var email = document.querySelector("input[data-testid='email']").value;
+    const error = document.getElementById("error");
+    const welcome = document.getElementById("welcome");
+    var input = document.querySelectorAll("input");
+    var name = input[0].value;
+    var password = input[3].value;
+    
 
-  const handlePush = () => {
-    setArr([text,...arr]);
-  }
+      for(var i=0 ; i<input.length ; i++){
 
-  const handlePop = () => {
-    if (arr.length == 0) {
-      window.alert('Stack is empty')
-    }else{
-    setPopEl(arr.shift())
+        console.log(input[i].value.length);
+
+        if(input[i].value.length == 0){
+
+            error.innerHTML = "<h1>All fields are mandatory</h1>";
+                return;
+        }
+
+      }
+
+      var matches = name.match(/(\d+)/);
+      console.log(matches);
+
+      if(matches == null){
+
+        error.innerHTML = "<h1>Name is not alphanumeric</h1>";
+        return;
+      }
+
+      if( email.indexOf('@') == -1)
+      {
+        welcome.innerHTML = "";
+        error.innerHTML = "<h1>Email must contain @</h1>";
+
+        return
+      }
+
+      if(password.length <6){
+        error.innerHTML = "<h1>Password must contain atleast 6 letters</h1>";
+        return;
+      }
+      
+      console.log("email="+email);
+
+      error.innerHTML ="";
+
+      welcome.innerHTML = "<h1>Hello "+email.slice(0,email.indexOf('@'))+"</h1>";
+
     }
-  }
 
-  const handleTop = () => {
-    if (arr.length == 0) {
-      window.alert('Stack is empty')
-    }else{
-    setTopEl(arr[0])
-    }
-  }
+  
 
   return (
-    <div className="container">
-      <h1 className="header">Stack</h1>
-      <div className="row">
-        <div className="col md-6 stack">
-          {arr.map((item,index)=>  <Element key={index} item={item} />)}
-        </div>
-        <div className="col md-3 operation">
-          <h2>Operations</h2>
-          <div className="input-group push">
-            <button className="btn btn-outline-secondary" type="button" id="button-addon2" onClick={handlePush}>
-              PUSH
-            </button>
-            <input type="text" className="form-control" onChange={handleInput}/>
-          </div>
-          <div className="input-group pop">
-            <button className="btn btn-outline-secondary" type="button" id="button-addon2" onClick={handlePop}>
-              POP
-            </button>
-            <input type="text" disabled className="form-control" value={popEl} />
-          </div>
-          <div className="input-group top">
-            <button className="btn btn-outline-secondary" type="button" id="button-addon2" onClick={handleTop}>
-              TOP
-            </button>
-            <input type="text" disabled className="form-control" value={topEl}/>
-          </div>
-        </div>
-      </div>
+
+    <div id="main">
+
+      <form  onSubmit={validate}>
+
+        <label>name</label>
+        <input type="text" data-testid = 'name'  />
+        <label>Email</label>
+        <input type="text" data-testid='email' id = "email"  /> 
+        <label>Gender</label>
+
+        <select data-testid='gender' placeholder="Gender">
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Others</option>
+        </select>
+
+          <label>Phone Number</label>
+          <input type="text" data-testid='phoneNumber'   />
+          <label>Password</label>
+          <input type="password" data-testid = "password"  />
+          <button type="submit" data-testid="submit">Submit</button>
+
+        </form>
+
+        <div id="error"></div>
+        <div id="welcome"></div>
     </div>
-  );
+
+  )
 }
 
+
 export default App;
+
